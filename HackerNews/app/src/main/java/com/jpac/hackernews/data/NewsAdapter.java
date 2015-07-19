@@ -34,4 +34,11 @@ public class NewsAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         return null;
     }
+
+    public void add(News news) {
+        newsList.add(news);
+
+        // redraw list to add the new story
+        notifyDataSetChanged();
+    }
 }
