@@ -86,8 +86,13 @@ public class NewsAdapter extends BaseAdapter {
         ((Activity) context).startActivity(i);
     }
 
-    public void add(News news) {
-        newsList.add(news);
+    public void add(List<News> news) {
+        newsList.addAll(news);
+    }
+
+    public void clear() {
+        newsList.clear();
+        notifyDataSetChanged();
     }
 
     public static class ViewHolder {
