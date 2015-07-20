@@ -82,7 +82,13 @@ public class HomeFragment extends Fragment {
 
                 // check if already finished downloading all details
                 if (downloadCount >= newsCount) {
-                    getView().findViewById(R.id.loading).setVisibility(View.GONE);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            getView().findViewById(R.id.loading).setVisibility(View.GONE);
+                            newsAdapter.notifyDataSetChanged();
+                        }
+                    });
                 }
             }
 
@@ -92,7 +98,13 @@ public class HomeFragment extends Fragment {
 
                 // check if already finished downloading all details
                 if (downloadCount >= newsCount) {
-                    getView().findViewById(R.id.loading).setVisibility(View.GONE);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            getView().findViewById(R.id.loading).setVisibility(View.GONE);
+                            newsAdapter.notifyDataSetChanged();
+                        }
+                    });
                 }
             }
         });

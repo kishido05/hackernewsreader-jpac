@@ -79,9 +79,6 @@ public class NewsAdapter extends BaseAdapter {
 
     public void add(News news) {
         newsList.add(news);
-
-        // redraw list to add the new story
-        notifyDataSetChanged();
     }
 
     public static class ViewHolder {
