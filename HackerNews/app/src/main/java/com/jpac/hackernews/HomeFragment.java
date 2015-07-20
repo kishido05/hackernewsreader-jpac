@@ -2,7 +2,7 @@ package com.jpac.hackernews;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +20,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends ListFragment {
 
     private NewsAdapter newsAdapter;
 
@@ -49,13 +49,13 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_news_list, container, false);
 
-        ListView list = (ListView) rootView.findViewById(R.id.list);
+        ListView list = (ListView) rootView.findViewById(android.R.id.list);
 
         newsAdapter = new NewsAdapter(getActivity());
         newsList = new ArrayList<News>();
 
         list.setAdapter(newsAdapter);
-        list.setEmptyView(rootView.findViewById(R.id.empty));
+        list.setEmptyView(rootView.findViewById(android.R.id.empty));
 
         swipe = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
         swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

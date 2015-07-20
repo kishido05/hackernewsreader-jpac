@@ -95,6 +95,16 @@ public class NewsAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    @Override
+    public boolean areAllItemsEnabled() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled(int position) {
+        return true;
+    }
+
     public static class ViewHolder {
 
         TextView title, author, date, points;
