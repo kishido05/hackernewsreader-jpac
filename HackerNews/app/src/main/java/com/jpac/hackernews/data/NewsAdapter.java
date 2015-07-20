@@ -1,6 +1,9 @@
 package com.jpac.hackernews.data;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,11 +73,17 @@ public class NewsAdapter extends BaseAdapter {
             public void onClick(View view) {
                 String url = (String) view.getTag();
 
-                // open browser
+                openUrl(url);
             }
         });
 
         return view;
+    }
+
+    private void openUrl(String url) {
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        ((Activity) context).startActivity(i);
     }
 
     public void add(News news) {
