@@ -15,6 +15,6 @@ public interface HackerNewsApi {
     @GET("/topstories.json")
     void listTopStories(Callback<List<String>> cl);
 
-    @GET("/item?id={item}")
-    void getDetail(@Path("item") String itemId, Callback<News> cn);
+    @GET("/item/{itemid}.json")
+    void getDetail(@Path("itemid") String itemId, Callback<News> cn);
 }
