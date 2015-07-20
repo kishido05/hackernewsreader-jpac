@@ -13,6 +13,14 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        News news = (News) getIntent().getSerializableExtra("news");
+        if (savedInstanceState == null) {
+            News news = (News) getIntent().getSerializableExtra("news");
+            Bundle arguments = new Bundle();
+            arguments.putSerializable("news", news);
+            DetailFragment fragment = new DetailFragment();
+            fragment.setArguments(arguments);
+            getSupportFragmentManager().beginTransaction().replace(R.id.detailFragment, fragment).commit();
+        }
+
     }
 }
