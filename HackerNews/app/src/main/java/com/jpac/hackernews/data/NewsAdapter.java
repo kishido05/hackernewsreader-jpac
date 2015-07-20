@@ -1,9 +1,14 @@
 package com.jpac.hackernews.data;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
+import android.widget.TextView;
+
+import com.jpac.hackernews.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +40,41 @@ public class NewsAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        return null;
+        ViewHolder holder = null;
+
+        if (view == null) {
+            view = LayoutInflater.from(context).inflate(R.layout.list_item_news, null);
+
+            holder = new ViewHolder();
+            holder.title = (TextView) view.findViewById(R.id.textTitle);
+            holder.author = (TextView) view.findViewById(R.id.textAuthor);
+            holder.date = (TextView) view.findViewById(R.id.textDate);
+            holder.points = (TextView) view.findViewById(R.id.textPoints);
+            holder.url = (ImageButton) view.findViewById(R.id.buttonOpenLink);
+
+            view.setTag(holder);
+        } else {
+            holder = (ViewHolder) view.getTag();
+        }
+
+        News news = (News) getItem(i);
+
+        holder.title.setText(news.getTitle());
+        holder.author.setText(news.getBy());
+        holder.date.setText(news.getTime());
+        holder.points.setText(news.getScore());
+
+        holder.url.setTag(news.getUrl());
+        holder.url.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String url = (String) view.getTag();
+
+                // open browser
+            }
+        });
+
+        return view;
     }
 
     public void add(News news) {
@@ -43,5 +82,12 @@ public class NewsAdapter extends BaseAdapter {
 
         // redraw list to add the new story
         notifyDataSetChanged();
+    }
+
+    public static class ViewHolder {
+
+        TextView title, author, date, points;
+        ImageButton url;
+
     }
 }
