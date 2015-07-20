@@ -1,6 +1,8 @@
 package com.jpac.hackernews.data;
 
-public class News {
+import java.io.Serializable;
+
+public class News implements Serializable {
 
     protected String by;
     protected String id;

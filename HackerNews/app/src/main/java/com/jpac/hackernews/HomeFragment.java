@@ -1,5 +1,6 @@
 package com.jpac.hackernews;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
@@ -22,6 +23,13 @@ import retrofit.client.Response;
 
 public class HomeFragment extends ListFragment {
 
+    public interface ListCallback {
+
+        void onItemSelected(int id, News news);
+    }
+
+    private HomeFragment.ListCallback callback;
+
     private NewsAdapter newsAdapter;
 
     private int newsCount = 0;
@@ -30,6 +38,7 @@ public class HomeFragment extends ListFragment {
     private SwipeRefreshLayout swipe;
 
     private List<News> newsList;
+    private boolean activateOnItemClick;
 
     @Override
     public void onResume() {
@@ -66,6 +75,20 @@ public class HomeFragment extends ListFragment {
         });
 
         return rootView;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        callback = (HomeFragment.ListCallback) activity;
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        if (callback != null) {
+            callback.onItemSelected(position, (News) newsAdapter.getItem(position));
+        }
     }
 
     private void downloadTopStories() {
@@ -129,5 +152,13 @@ public class HomeFragment extends ListFragment {
                 swipe.setRefreshing(false);
             }
         });
+    }
+
+    public void setActivateOnItemClick(boolean activateOnItemClick) {
+        this.activateOnItemClick = activateOnItemClick;
+
+        getListView().setChoiceMode(
+                activateOnItemClick ? ListView.CHOICE_MODE_SINGLE
+                        : ListView.CHOICE_MODE_NONE);
     }
 }
