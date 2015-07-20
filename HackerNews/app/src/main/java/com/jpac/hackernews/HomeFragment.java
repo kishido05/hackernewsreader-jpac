@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.jpac.hackernews.data.News;
 import com.jpac.hackernews.data.NewsAdapter;
@@ -25,13 +26,6 @@ public class HomeFragment extends Fragment {
     private int downloadCount = 0;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        newsAdapter = new NewsAdapter();
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
 
@@ -42,6 +36,13 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_news_list, container, false);
+
+        ListView list = (ListView) rootView.findViewById(R.id.list);
+
+        newsAdapter = new NewsAdapter(getActivity());
+
+        list.setAdapter(newsAdapter);
+        list.setEmptyView(rootView.findViewById(R.id.empty));
 
         return rootView;
     }

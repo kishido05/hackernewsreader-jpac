@@ -1,5 +1,6 @@
 package com.jpac.hackernews.data;
 
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -10,8 +11,10 @@ import java.util.List;
 public class NewsAdapter extends BaseAdapter {
 
     private List<News> newsList;
+    private Context context;
 
-    public NewsAdapter() {
+    public NewsAdapter(Context context) {
+        this.context = context;
         newsList = new ArrayList<News>();
     }
 
