@@ -33,26 +33,10 @@ public class HomeFragment extends ListFragment {
 
     private NewsAdapter newsAdapter;
 
-    private int newsCount = 0;
-    private int downloadCount = 0;
-
     private SwipeRefreshLayout swipe;
 
     private List<News> newsList;
-    private boolean activateOnItemClick;
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        swipe.post(new Runnable() {
-            @Override
-            public void run() {
-                swipe.setRefreshing(true);
-                downloadTopStories();
-            }
-        });
-    }
+    private int newsCount = 0;
 
     @Nullable
     @Override
@@ -83,6 +67,19 @@ public class HomeFragment extends ListFragment {
         super.onAttach(activity);
 
         callback = (HomeFragment.ListCallback) activity;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        swipe.post(new Runnable() {
+            @Override
+            public void run() {
+                swipe.setRefreshing(true);
+                downloadTopStories();
+            }
+        });
     }
 
     @Override
@@ -118,24 +115,24 @@ public class HomeFragment extends ListFragment {
         HackerNewsClient.getHackerNewsClient().getDetail(id, new Callback<News>() {
             @Override
             public void success(News news, Response response) {
-                downloadCount++;
+                newsCount--;
 
                 if (news != null) {
                     newsList.add(news);
                 }
 
                 // check if already finished downloading all details
-                if (downloadCount >= newsCount) {
+                if (newsCount <= 0) {
                     displayNews();
                 }
             }
 
             @Override
             public void failure(RetrofitError error) {
-                downloadCount++;
+                newsCount--;
 
                 // check if already finished downloading all details
-                if (downloadCount >= newsCount) {
+                if (newsCount <= 0) {
                     displayNews();
                 }
             }
@@ -150,16 +147,11 @@ public class HomeFragment extends ListFragment {
                 newsAdapter.add(newsList);
                 newsAdapter.notifyDataSetChanged();
                 swipe.setRefreshing(false);
-
-                downloadCount = 0;
-                newsCount = 0;
             }
         });
     }
 
     public void setActivateOnItemClick(boolean activateOnItemClick) {
-        this.activateOnItemClick = activateOnItemClick;
-
         getListView().setChoiceMode(
                 activateOnItemClick ? ListView.CHOICE_MODE_SINGLE
                         : ListView.CHOICE_MODE_NONE);
