@@ -1,9 +1,11 @@
 package com.jpac.hackernews;
 
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ListView;
+import android.view.ViewGroup;
 
 import com.jpac.hackernews.data.News;
 import com.jpac.hackernews.data.NewsAdapter;
@@ -15,7 +17,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class HomeFragment extends ListFragment {
+public class HomeFragment extends Fragment {
 
     private NewsAdapter newsAdapter;
 
@@ -30,13 +32,23 @@ public class HomeFragment extends ListFragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onResume() {
+        super.onResume();
 
         downloadTopStories();
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_news_list, container, false);
+
+        return rootView;
+    }
+
     private void downloadTopStories() {
+        getView().findViewById(R.id.loading).setVisibility(View.VISIBLE);
+
         HackerNewsClient.getHackerNewsClient().listTopStories(new Callback<List<String>>() {
             @Override
             public void success(List<String> ids, Response response) {
@@ -51,6 +63,8 @@ public class HomeFragment extends ListFragment {
             public void failure(RetrofitError error) {
                 newsCount = 0;
                 downloadCount = 0;
+
+                getView().findViewById(R.id.loading).setVisibility(View.GONE);
             }
         });
     }
@@ -67,19 +81,19 @@ public class HomeFragment extends ListFragment {
 
                 // check if already finished downloading all details
                 if (downloadCount >= newsCount) {
-                    
+                    getView().findViewById(R.id.loading).setVisibility(View.GONE);
                 }
             }
 
             @Override
             public void failure(RetrofitError error) {
+                downloadCount++;
 
+                // check if already finished downloading all details
+                if (downloadCount >= newsCount) {
+                    getView().findViewById(R.id.loading).setVisibility(View.GONE);
+                }
             }
         });
-    }
-
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
     }
 }
