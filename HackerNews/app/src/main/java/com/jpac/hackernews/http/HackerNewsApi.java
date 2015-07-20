@@ -10,11 +10,11 @@ import retrofit.http.Path;
 
 public interface HackerNewsApi {
 
-    public static final String END_POINT = "https://hacker-news.firebaseio.com/v0/";
+    public static final String END_POINT = "https://hacker-news.firebaseio.com/v0";
 
-    @GET("topstories.json")
+    @GET("/topstories.json")
     void listTopStories(Callback<List<String>> cl);
 
-    @GET("item?id={item}")
+    @GET("/item?id={item}")
     void getDetail(@Path("item") String itemId, Callback<News> cn);
 }
