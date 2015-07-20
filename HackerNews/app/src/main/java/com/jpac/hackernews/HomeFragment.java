@@ -15,6 +15,7 @@ import com.jpac.hackernews.data.NewsAdapter;
 import com.jpac.hackernews.http.HackerNewsClient;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import retrofit.Callback;
@@ -93,6 +94,7 @@ public class HomeFragment extends ListFragment {
 
     private void downloadTopStories() {
         newsAdapter.clear();
+        newsList.clear();
 
         HackerNewsClient.getHackerNewsClient().listTopStories(new Callback<List<String>>() {
             @Override
@@ -107,10 +109,7 @@ public class HomeFragment extends ListFragment {
 
             @Override
             public void failure(RetrofitError error) {
-                newsCount = 0;
-                downloadCount = 0;
-
-                swipe.setRefreshing(false);
+                displayNews();
             }
         });
     }
@@ -147,9 +146,13 @@ public class HomeFragment extends ListFragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                Collections.sort(newsList, new NewsComparator());
                 newsAdapter.add(newsList);
                 newsAdapter.notifyDataSetChanged();
                 swipe.setRefreshing(false);
+
+                downloadCount = 0;
+                newsCount = 0;
             }
         });
     }
@@ -160,5 +163,12 @@ public class HomeFragment extends ListFragment {
         getListView().setChoiceMode(
                 activateOnItemClick ? ListView.CHOICE_MODE_SINGLE
                         : ListView.CHOICE_MODE_NONE);
+    }
+
+    private class NewsComparator implements java.util.Comparator<News> {
+        @Override
+        public int compare(News n1, News n2) {
+            return n2.getTime().compareTo(n1.getTime());
+        }
     }
 }
