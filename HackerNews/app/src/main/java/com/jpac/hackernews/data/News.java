@@ -12,6 +12,7 @@ public class News implements Serializable {
     protected String title;
     protected String type;
     protected String url;
+    protected String[] kids;
 
     public String getBy() {
         return by;
@@ -43,5 +44,9 @@ public class News implements Serializable {
 
     public String getUrl() {
         return url;
+    }
+
+    public String[] getKids() {
+        return kids;
     }
 }
