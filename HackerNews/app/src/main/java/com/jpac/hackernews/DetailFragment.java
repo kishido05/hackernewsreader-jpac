@@ -14,6 +14,7 @@ import com.jpac.hackernews.data.Comments;
 import com.jpac.hackernews.data.CommentsAdapter;
 import com.jpac.hackernews.data.News;
 import com.jpac.hackernews.http.HackerNewsClient;
+import com.jpac.hackernews.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,7 +95,7 @@ public class DetailFragment extends ListFragment {
 
         title.setText(news.getTitle());
         author.setText(news.getBy());
-        date.setText(news.getTime());
+        date.setText(Utils.getTimeAgo(news.getTime()));
         points.setText(news.getScore());
 
     }

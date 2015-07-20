@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.jpac.hackernews.R;
+import com.jpac.hackernews.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +65,7 @@ public class NewsAdapter extends BaseAdapter {
 
         holder.title.setText(news.getTitle());
         holder.author.setText(news.getBy());
-        holder.date.setText(news.getTime());
+        holder.date.setText(Utils.getTimeAgo(news.getTime()));
         holder.points.setText(news.getScore());
 
         holder.url.setTag(news.getUrl());

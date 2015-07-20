@@ -12,6 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.jpac.hackernews.R;
+import com.jpac.hackernews.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +69,7 @@ public class CommentsAdapter extends BaseAdapter {
         Comments comment = (Comments) getItem(i);
 
         holder.commentAuthor.setText(comment.getComment().getBy());
-        holder.commentTime.setText(comment.getComment().getTime());
+        holder.commentTime.setText(Utils.getTimeAgo(comment.getComment().getTime()));
         holder.commentContent.setText(Html.fromHtml(comment.getComment().getText()));
 
         if (comment.getReply() != null) {
