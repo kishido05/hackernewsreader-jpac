@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,7 +94,7 @@ public class HomeFragment extends ListFragment {
         newsAdapter.clear();
         newsList.clear();
 
-        HackerNewsClient.getHackerNewsClient().listTopStories(new Callback<List<String>>() {
+        HackerNewsClient.getHackerNewsClient(getActivity()).listTopStories(new Callback<List<String>>() {
             @Override
             public void success(List<String> ids, Response response) {
                 newsCount = ids.size();
@@ -112,10 +113,12 @@ public class HomeFragment extends ListFragment {
     }
 
     private void downloadStoryDetail(String id) {
-        HackerNewsClient.getHackerNewsClient().getDetail(id, new Callback<News>() {
+        HackerNewsClient.getHackerNewsClient(getActivity()).getDetail(id, new Callback<News>() {
             @Override
             public void success(News news, Response response) {
                 newsCount--;
+
+                Log.i("test", "Success on Request: " + newsCount);
 
                 if (news != null) {
                     newsList.add(news);
@@ -130,6 +133,8 @@ public class HomeFragment extends ListFragment {
             @Override
             public void failure(RetrofitError error) {
                 newsCount--;
+
+                Log.i("test", "Error on Request: " + newsCount);
 
                 // check if already finished downloading all details
                 if (newsCount <= 0) {

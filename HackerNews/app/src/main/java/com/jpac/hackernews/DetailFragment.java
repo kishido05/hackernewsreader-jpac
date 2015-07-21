@@ -123,7 +123,7 @@ public class DetailFragment extends ListFragment {
         String[] ids = parent.getKids();
 
         if (ids != null && ids.length > 0) {
-            HackerNewsClient.getHackerNewsClient().getDetail(ids[0], new Callback<News>() {
+            HackerNewsClient.getHackerNewsClient(getActivity()).getDetail(ids[0], new Callback<News>() {
                 @Override
                 public void success(News news, Response response) {
                     Comments comment = new Comments();
@@ -165,7 +165,7 @@ public class DetailFragment extends ListFragment {
     }
 
     private void downloadComment(String id) {
-        HackerNewsClient.getHackerNewsClient().getDetail(id, new Callback<News>() {
+        HackerNewsClient.getHackerNewsClient(getActivity()).getDetail(id, new Callback<News>() {
 
             @Override
             public void success(News news, Response response) {
