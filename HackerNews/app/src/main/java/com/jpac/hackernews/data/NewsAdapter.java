@@ -15,6 +15,7 @@ import com.jpac.hackernews.R;
 import com.jpac.hackernews.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class NewsAdapter extends BaseAdapter {
@@ -89,11 +90,11 @@ public class NewsAdapter extends BaseAdapter {
 
     public void add(List<News> news) {
         newsList.addAll(news);
+        Collections.sort(newsList, new News());
     }
 
     public void clear() {
         newsList.clear();
-        notifyDataSetChanged();
     }
 
     @Override

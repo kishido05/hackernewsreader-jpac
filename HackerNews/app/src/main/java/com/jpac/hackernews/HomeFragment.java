@@ -33,11 +33,13 @@ public class HomeFragment extends ListFragment {
     private HomeFragment.ListCallback callback;
 
     private NewsAdapter newsAdapter;
-
     private SwipeRefreshLayout swipe;
 
+    // temporary list for News
     private List<News> newsList;
     private int newsCount = 0;
+
+    private List<String> cachedNews;
 
     @Nullable
     @Override
@@ -48,6 +50,7 @@ public class HomeFragment extends ListFragment {
 
         newsAdapter = new NewsAdapter(getActivity());
         newsList = new ArrayList<News>();
+        cachedNews = new ArrayList<String>();
 
         list.setAdapter(newsAdapter);
         list.setEmptyView(rootView.findViewById(android.R.id.empty));
@@ -91,7 +94,6 @@ public class HomeFragment extends ListFragment {
     }
 
     private void downloadTopStories() {
-        newsAdapter.clear();
         newsList.clear();
 
         HackerNewsClient.getHackerNewsClient(getActivity()).listTopStories(new Callback<List<String>>() {
@@ -99,9 +101,15 @@ public class HomeFragment extends ListFragment {
             public void success(List<String> ids, Response response) {
                 newsCount = ids.size();
 
-                // get list of strings and retrieve detail for each
-                for (String id : ids) {
-                    downloadStoryDetail(id);
+                if (cachedNews.size() < newsCount) {
+                    // get list of strings and retrieve detail for each
+                    for (String id : ids) {
+                        if (!cachedNews.contains(id)) {
+                            downloadStoryDetail(id);
+                        }
+                    }
+                } else {
+                    displayNews();
                 }
             }
 
@@ -118,10 +126,9 @@ public class HomeFragment extends ListFragment {
             public void success(News news, Response response) {
                 newsCount--;
 
-                Log.i("test", "Success on Request: " + newsCount);
-
                 if (news != null) {
                     newsList.add(news);
+                    cachedNews.add(news.getId());
                 }
 
                 // check if already finished downloading all details
@@ -133,8 +140,6 @@ public class HomeFragment extends ListFragment {
             @Override
             public void failure(RetrofitError error) {
                 newsCount--;
-
-                Log.i("test", "Error on Request: " + newsCount);
 
                 // check if already finished downloading all details
                 if (newsCount <= 0) {
@@ -148,7 +153,6 @@ public class HomeFragment extends ListFragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Collections.sort(newsList, new NewsComparator());
                 newsAdapter.add(newsList);
                 newsAdapter.notifyDataSetChanged();
                 swipe.setRefreshing(false);
@@ -162,10 +166,4 @@ public class HomeFragment extends ListFragment {
                         : ListView.CHOICE_MODE_NONE);
     }
 
-    private class NewsComparator implements java.util.Comparator<News> {
-        @Override
-        public int compare(News n1, News n2) {
-            return n2.getTime().compareTo(n1.getTime());
-        }
-    }
 }
