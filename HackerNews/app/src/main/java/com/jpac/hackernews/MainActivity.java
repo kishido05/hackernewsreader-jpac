@@ -28,7 +28,11 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.List
     @Override
     public void onItemSelected(int id, News news) {
         if (isDualPane) {
-
+            Bundle arguments = new Bundle();
+            arguments.putSerializable("news", news);
+            DetailFragment fragment = new DetailFragment();
+            fragment.setArguments(arguments);
+            getSupportFragmentManager().beginTransaction().replace(R.id.detailFragment, fragment).commit();
         } else {
             toDetailActivity(news);
         }
