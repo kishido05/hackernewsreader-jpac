@@ -1,49 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:descendantFocusability="blocksDescendants">
+<android.support.v7.widget.CardView  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    card_view:cardCornerRadius="10dp">
 
-    <TextView
-        android:id="@+id/textPoints"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.15"
-        android:gravity="center"/>
-
-    <RelativeLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/textTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="true"/>
+        android:orientation="horizontal"
+        android:descendantFocusability="blocksDescendants">
 
         <TextView
-            android:id="@+id/textAuthor"
+            android:id="@+id/textPoints"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.15"
+            android:gravity="center"/>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/textTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"/>
+
+            <TextView
+                android:id="@+id/textAuthor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textTitle"
+                android:singleLine="true"/>
+
+            <TextView
+                android:id="@+id/textDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textTitle"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/textAuthor"
+                android:singleLine="true"/>
+        </RelativeLayout>
+
+        <ImageButton
+            android:id="@+id/buttonOpenLink"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/textTitle"
-            android:singleLine="true"/>
+            android:src="@drawable/ic_link"
+            android:focusable="false"/>
 
-        <TextView
-            android:id="@+id/textDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/textTitle"
-            android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@id/textAuthor"
-            android:singleLine="true"/>
-    </RelativeLayout>
-
-    <ImageButton
-        android:id="@+id/buttonOpenLink"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_link"
-        android:focusable="false"/>
-
-</LinearLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

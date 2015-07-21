@@ -18,11 +18,6 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.List
 
         // show the 2 fragments if screen is landscape
         isDualPane = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-
-        if (findViewById(R.id.detailFragment) != null) {
-            ((HomeFragment) getSupportFragmentManager().findFragmentById(R.id.listFragment))
-                .setActivateOnItemClick(true);
-        }
     }
 
     @Override

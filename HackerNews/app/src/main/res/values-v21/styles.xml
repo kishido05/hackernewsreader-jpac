@@ -5,8 +5,8 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#FF9900</item>
         <item name="android:textColorPrimary">#FFFFFF</item>
-        <item name="android:colorPrimaryDark">#CC6600</item>
-        <item name="android:navigationBarColor">#CC6600</item>
+        <item name="android:colorPrimaryDark">#FF9900</item>
+        <item name="android:navigationBarColor">#FF9900</item>
     </style>
 
 </resources>

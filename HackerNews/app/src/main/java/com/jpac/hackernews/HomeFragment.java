@@ -3,27 +3,27 @@ package com.jpac.hackernews;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import com.jpac.hackernews.data.News;
 import com.jpac.hackernews.data.NewsAdapter;
 import com.jpac.hackernews.http.HackerNewsClient;
+import com.jpac.hackernews.view.SpacesItemDecoration;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class HomeFragment extends ListFragment {
+public class HomeFragment extends Fragment implements View.OnClickListener {
 
     public interface ListCallback {
 
@@ -46,14 +46,18 @@ public class HomeFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_news_list, container, false);
 
-        ListView list = (ListView) rootView.findViewById(android.R.id.list);
+        RecyclerView list = (RecyclerView) rootView.findViewById(R.id.list);
 
-        newsAdapter = new NewsAdapter(getActivity());
+        list.addItemDecoration(new SpacesItemDecoration(15));
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        list.setLayoutManager(layoutManager);
+
+        newsAdapter = new NewsAdapter(getActivity(), this);
         newsList = new ArrayList<News>();
         cachedNews = new ArrayList<String>();
 
         list.setAdapter(newsAdapter);
-        list.setEmptyView(rootView.findViewById(android.R.id.empty));
 
         swipe = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
         swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -64,6 +68,13 @@ public class HomeFragment extends ListFragment {
         });
 
         return rootView;
+    }
+
+    @Override
+    public void onClick(View view) {
+        int id = (int) view.getTag();
+
+        callback.onItemSelected(id, newsAdapter.get(id));
     }
 
     @Override
@@ -84,13 +95,6 @@ public class HomeFragment extends ListFragment {
                 downloadTopStories();
             }
         });
-    }
-
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        if (callback != null) {
-            callback.onItemSelected(position, (News) newsAdapter.getItem(position));
-        }
     }
 
     private void downloadTopStories() {
@@ -159,11 +163,4 @@ public class HomeFragment extends ListFragment {
             }
         });
     }
-
-    public void setActivateOnItemClick(boolean activateOnItemClick) {
-        getListView().setChoiceMode(
-                activateOnItemClick ? ListView.CHOICE_MODE_SINGLE
-                        : ListView.CHOICE_MODE_NONE);
-    }
-
 }

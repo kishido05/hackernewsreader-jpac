@@ -4,65 +4,43 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageButton;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jpac.hackernews.R;
 import com.jpac.hackernews.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-public class NewsAdapter extends BaseAdapter {
+public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> {
 
-    private List<News> newsList;
-    private Context context;
+    List<News> newsList;
+    Context context;
+    private View.OnClickListener itemClickListener;
 
-    public NewsAdapter(Context context) {
+    public NewsAdapter(Context context, View.OnClickListener listener) {
+        this.itemClickListener = listener;
         this.context = context;
         newsList = new ArrayList<News>();
     }
 
     @Override
-    public int getCount() {
-        return newsList.size();
+    public NewsViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
+        View view = inflater.inflate(R.layout.list_item_news, viewGroup, false);
+        return new NewsViewHolder(view);
     }
 
     @Override
-    public long getItemId(int i) {
-        return 0;
-    }
+    public void onBindViewHolder(NewsViewHolder holder, int i) {
+        News news = newsList.get(i);
 
-    @Override
-    public Object getItem(int i) {
-        return newsList.get(i);
-    }
-
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        ViewHolder holder = null;
-
-        if (view == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.list_item_news, null);
-
-            holder = new ViewHolder();
-            holder.title = (TextView) view.findViewById(R.id.textTitle);
-            holder.author = (TextView) view.findViewById(R.id.textAuthor);
-            holder.date = (TextView) view.findViewById(R.id.textDate);
-            holder.points = (TextView) view.findViewById(R.id.textPoints);
-            holder.url = (ImageButton) view.findViewById(R.id.buttonOpenLink);
-
-            view.setTag(holder);
-        } else {
-            holder = (ViewHolder) view.getTag();
-        }
-
-        News news = (News) getItem(i);
+        holder.parent.setTag(i);
+        holder.parent.setOnClickListener(itemClickListener);
 
         holder.title.setText(news.getTitle());
         holder.author.setText(news.getBy());
@@ -78,39 +56,25 @@ public class NewsAdapter extends BaseAdapter {
                 openUrl(url);
             }
         });
-
-        return view;
     }
 
     private void openUrl(String url) {
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(Uri.parse(url));
-        ((Activity) context).startActivity(i);
+        context.startActivity(i);
+    }
+
+    @Override
+    public int getItemCount() {
+        return newsList.size();
     }
 
     public void add(List<News> news) {
         newsList.addAll(news);
-        Collections.sort(newsList, new News());
+        notifyDataSetChanged();
     }
 
-    public void clear() {
-        newsList.clear();
-    }
-
-    @Override
-    public boolean areAllItemsEnabled() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled(int position) {
-        return true;
-    }
-
-    public static class ViewHolder {
-
-        TextView title, author, date, points;
-        ImageButton url;
-
+    public News get(int i) {
+        return newsList.get(i);
     }
 }
