@@ -46,15 +46,14 @@ public class DetailFragment extends ListFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         swipe.post(new Runnable() {
             @Override
             public void run() {
                 swipe.setRefreshing(true);
-                downloadTopComments();
+                downloadDetail();
             }
         });
     }
@@ -80,7 +79,7 @@ public class DetailFragment extends ListFragment {
         swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                downloadTopComments();
+                downloadDetail();
             }
         });
 
@@ -98,6 +97,30 @@ public class DetailFragment extends ListFragment {
         date.setText(Utils.getTimeAgo(news.getTime()));
         points.setText(news.getScore());
 
+    }
+
+    private void downloadDetail() {
+        if (news == null) {
+            displayComments();
+            return;
+        }
+
+        String id = news.getId();
+
+        HackerNewsClient.getHackerNewsClient(getActivity()).getDetail(id, new Callback<News>() {
+
+            @Override
+            public void success(News news, Response response) {
+                DetailFragment.this.news = news;
+
+                downloadTopComments();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                downloadTopComments();
+            }
+        });
     }
 
     private void downloadTopComments() {
