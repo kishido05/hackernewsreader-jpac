@@ -72,7 +72,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        int id = (int) view.getTag();
+        int id = (Integer) view.getTag();
 
         callback.onItemSelected(id, newsAdapter.get(id));
     }
