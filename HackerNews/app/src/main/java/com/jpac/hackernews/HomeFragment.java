@@ -105,7 +105,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             public void success(List<String> ids, Response response) {
                 newsCount = ids.size();
 
-                if (cachedNews.size() < newsCount) {
+                if (!hasCachedAll(ids)) {
                     // get list of strings and retrieve detail for each
                     for (String id : ids) {
                         if (!cachedNews.contains(id)) {
@@ -122,6 +122,17 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 displayNews();
             }
         });
+    }
+
+    // check if all of the returned ids are already downloaded and cached
+    private boolean hasCachedAll(List<String> ids) {
+        for (String id : ids) {
+            if (!cachedNews.contains(id)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private void downloadStoryDetail(String id) {
