@@ -112,7 +112,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                         downloadQueue.add(ids.get(i));
                 }
 
-                downloadItemDetail();
+                if (downloadQueue.isEmpty()) {
+                    displayNews();
+                } else {
+                    downloadItemDetail();
+                }
             }
 
             @Override
@@ -130,18 +134,20 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             public void success(News news, Response response) {
                 cachedNews.put(news.getId(), news);
 
-                if (downloadQueue.size() > 0)
-                    downloadItemDetail();
-                else
+                if (downloadQueue.isEmpty()) {
                     displayNews();
+                } else {
+                    downloadItemDetail();
+                }
             }
 
             @Override
             public void failure(RetrofitError error) {
-                if (downloadQueue.size() > 0)
-                    downloadItemDetail();
-                else
+                if (downloadQueue.isEmpty()) {
                     displayNews();
+                } else {
+                    downloadItemDetail();
+                }
             }
         });
     }
