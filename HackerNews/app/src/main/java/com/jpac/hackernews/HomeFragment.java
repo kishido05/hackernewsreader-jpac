@@ -48,7 +48,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         RecyclerView list = (RecyclerView) rootView.findViewById(R.id.list);
 
-        list.addItemDecoration(new SpacesItemDecoration(15));
+        list.addItemDecoration(new SpacesItemDecoration(5));
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         list.setLayoutManager(layoutManager);
