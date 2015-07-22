@@ -17,6 +17,7 @@ import com.jpac.hackernews.http.HackerNewsClient;
 import com.jpac.hackernews.view.SpacesItemDecoration;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit.Callback;
@@ -35,11 +36,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private NewsAdapter newsAdapter;
     private SwipeRefreshLayout swipe;
 
-    // temporary list for News
-    private List<News> newsList;
-    private int newsCount = 0;
-
-    private List<String> cachedNews;
+    // id list for already downloaded data
+    private HashMap<String, News> cachedNews;
+    private List<String> storyList;
+    private List<String> downloadQueue;
 
     @Nullable
     @Override
@@ -54,8 +54,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         list.setLayoutManager(layoutManager);
 
         newsAdapter = new NewsAdapter(getActivity(), this);
-        newsList = new ArrayList<News>();
-        cachedNews = new ArrayList<String>();
 
         list.setAdapter(newsAdapter);
 
@@ -66,6 +64,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 downloadTopStories();
             }
         });
+
+        cachedNews = new HashMap<String, News>();
+        storyList = new ArrayList<String>();
+        downloadQueue = new ArrayList<String>();
 
         return rootView;
     }
@@ -98,23 +100,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     private void downloadTopStories() {
-        newsList.clear();
-
         HackerNewsClient.getHackerNewsClient(getActivity()).listTopStories(new Callback<List<String>>() {
             @Override
             public void success(List<String> ids, Response response) {
-                newsCount = ids.size();
+                storyList = new ArrayList<String>(ids);
 
-                if (!hasCachedAll(ids)) {
-                    // get list of strings and retrieve detail for each
-                    for (String id : ids) {
-                        if (!cachedNews.contains(id)) {
-                            downloadStoryDetail(id);
-                        }
-                    }
-                } else {
-                    displayNews();
+                // prepare download queue
+                int len = Math.min(ids.size(), 10);
+                for (int i=0; i<len; i++) {
+                    if (!cachedNews.containsKey(ids.get(i)))
+                        downloadQueue.add(ids.get(i));
                 }
+
+                downloadItemDetail();
             }
 
             @Override
@@ -124,42 +122,26 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         });
     }
 
-    // check if all of the returned ids are already downloaded and cached
-    private boolean hasCachedAll(List<String> ids) {
-        for (String id : ids) {
-            if (!cachedNews.contains(id)) {
-                return false;
-            }
-        }
+    private void downloadItemDetail() {
+        String id = downloadQueue.remove(0);
 
-        return true;
-    }
-
-    private void downloadStoryDetail(String id) {
         HackerNewsClient.getHackerNewsClient(getActivity()).getDetail(id, new Callback<News>() {
             @Override
             public void success(News news, Response response) {
-                newsCount--;
+                cachedNews.put(news.getId(), news);
 
-                if (news != null) {
-                    newsList.add(news);
-                    cachedNews.add(news.getId());
-                }
-
-                // check if already finished downloading all details
-                if (newsCount <= 0) {
+                if (downloadQueue.size() > 0)
+                    downloadItemDetail();
+                else
                     displayNews();
-                }
             }
 
             @Override
             public void failure(RetrofitError error) {
-                newsCount--;
-
-                // check if already finished downloading all details
-                if (newsCount <= 0) {
+                if (downloadQueue.size() > 0)
+                    downloadItemDetail();
+                else
                     displayNews();
-                }
             }
         });
     }
@@ -168,7 +150,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                newsAdapter.add(newsList);
+                newsAdapter.clear();
+                int len = Math.min(storyList.size(), 10);
+                for (int i=0; i<len; i++) {
+                    News news = cachedNews.get(storyList.get(i));
+                    if (news != null) {
+                        newsAdapter.add(news);
+                    }
+                }
                 newsAdapter.notifyDataSetChanged();
                 swipe.setRefreshing(false);
             }

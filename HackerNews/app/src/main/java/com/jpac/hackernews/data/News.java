@@ -3,7 +3,7 @@ package com.jpac.hackernews.data;
 import java.io.Serializable;
 import java.util.Comparator;
 
-public class News implements Serializable, Comparator<News> {
+public class News implements Serializable {
 
     protected String by;
     protected String id;
@@ -51,8 +51,4 @@ public class News implements Serializable, Comparator<News> {
         return kids;
     }
 
-    @Override
-    public int compare(News n1, News n2) {
-        return n2.getTime().compareTo(n1.getTime());
-    }
 }
