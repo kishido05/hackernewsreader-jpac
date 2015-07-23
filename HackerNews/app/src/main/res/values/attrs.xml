@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RobotoTextView">
+        <attr name="fontStyle" format="integer">
+            <flag name="regular" value="0" />
+            <flag name="medium" value="1" />
+            <flag name="thin" value="2" />
+            <flag name="light" value="3" />
+            <flag name="italic" value="4" />
+            <flag name="mediumitalic" value="5" />
+            <flag name="thinitalic" value="6" />
+            <flag name="lightitalic" value="7" />
+        </attr>
+    </declare-styleable>
+</resources>

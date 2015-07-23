@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.jpac.hackernews.data.News;
+import com.jpac.hackernews.utils.FontUtils;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -12,6 +13,8 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
+        FontUtils.init(this);
 
         if (savedInstanceState == null) {
             News news = (News) getIntent().getSerializableExtra("news");

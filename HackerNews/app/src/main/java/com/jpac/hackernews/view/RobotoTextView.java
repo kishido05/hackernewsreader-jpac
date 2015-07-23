@@ -1,37 +1,31 @@
 package com.jpac.hackernews.view;
 
 import android.content.Context;
-import android.content.res.TypedArray;
-import android.os.Build;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
+import com.jpac.hackernews.utils.FontUtils;
+
 public class RobotoTextView extends TextView {
 
-    protected static final String XML_NAMESPACE = "http://schemas.android.com/apk/res/android";
+    protected static final String[] ROBOTO_FONT = new String[] {
+        "Roboto-Regular.ttf",
+        "Roboto-Medium.ttf",
+        "Roboto-Thin.ttf",
+        "Roboto-Light.ttf",
+        "Roboto-Italic.ttf",
+        "Roboto-MediumItalic.ttf",
+        "Roboto-ThinItalic.ttf",
+        "Roboto-LightItalic.ttf"
+    };
 
     public RobotoTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-            int[] attribs = new int[]{android.R.attr.textStyle, android.R.attr.fontFamily};
+        int style = attrs.getAttributeIntValue("http://schemas.android.com/apk/res-auto", "fontStyle", 0);
 
-            TypedArray typedArray = context.obtainStyledAttributes(attrs, attribs);
-
-            String textStyle = typedArray.getString(0);
-            String fontFamily = typedArray.getString(1);
-
-            typedArray.recycle();
-
-            setRobotoTypeface(textStyle, fontFamily);
-        }
-
-    }
-
-    private void setRobotoTypeface(String textStyle, String fontFamily) {
-        textStyle = (textStyle == null) ? "normal" : textStyle;
-        fontFamily = (fontFamily == null) ? "sans-serif" : fontFamily;
-
-        // TODO: build typeface filename to load
+        Typeface tf = FontUtils.open(ROBOTO_FONT[style]);
+        setTypeface(tf);
     }
 }
