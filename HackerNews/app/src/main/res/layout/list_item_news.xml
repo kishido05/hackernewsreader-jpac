@@ -7,65 +7,69 @@
     android:padding="5dp"
     card_view:cardCornerRadius="0dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:minHeight="80dp"
-        android:orientation="horizontal"
+        android:minHeight="100dp"
         android:padding="5dp"
         android:descendantFocusability="blocksDescendants">
 
-        <com.jpac.hackernews.view.RobotoTextView
-            android:id="@+id/textPoints"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.2"
-            android:gravity="center"
-            android:background="#11000000"
-            android:layout_margin="10dp"
-            android:textStyle="bold"
-            roboto:fontStyle="thin"/>
-
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <com.jpac.hackernews.view.RobotoTextView
-                android:id="@+id/textTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                roboto:fontStyle="light"/>
-
-            <com.jpac.hackernews.view.RobotoTextView
-                android:id="@+id/textAuthor"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/textTitle"
-                android:singleLine="true"
-                roboto:fontStyle="light"/>
-
-            <com.jpac.hackernews.view.RobotoTextView
-                android:id="@+id/textDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/textTitle"
-                android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@id/textAuthor"
-                android:singleLine="true"
-                roboto:fontStyle="light"/>
-        </RelativeLayout>
-
-        <ImageButton
+        <ImageView
             android:id="@+id/buttonOpenLink"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_link"
             android:focusable="false"
-            android:visibility="gone"/>
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"/>
 
-    </LinearLayout>
+        <com.jpac.hackernews.view.RobotoTextView
+            android:id="@+id/textPoints"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:minWidth="50dp"
+            android:gravity="center"
+            android:background="#11000000"
+            android:layout_centerVertical="true"
+            android:layout_alignTop="@id/buttonOpenLink"
+            android:layout_alignBottom="@id/buttonOpenLink"
+            android:padding="5dp"
+            android:textStyle="bold"
+            roboto:fontStyle="thin"/>
+
+        <com.jpac.hackernews.view.RobotoTextView
+            android:id="@+id/textTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/textPoints"
+            android:layout_toLeftOf="@id/buttonOpenLink"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            roboto:fontStyle="light"/>
+
+        <com.jpac.hackernews.view.RobotoTextView
+            android:id="@+id/textAuthor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textTitle"
+            android:layout_toRightOf="@id/textPoints"
+            android:layout_marginLeft="10dp"
+            android:singleLine="true"
+            roboto:fontStyle="light"/>
+
+        <com.jpac.hackernews.view.RobotoTextView
+            android:id="@+id/textDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textTitle"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_toRightOf="@id/textAuthor"
+            android:layout_toLeftOf="@id/buttonOpenLink"
+            android:singleLine="true"
+            roboto:fontStyle="light"/>
+
+    </RelativeLayout>
 </android.support.v7.widget.CardView>
