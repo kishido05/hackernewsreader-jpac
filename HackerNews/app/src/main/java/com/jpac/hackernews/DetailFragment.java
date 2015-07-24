@@ -2,12 +2,13 @@ package com.jpac.hackernews;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jpac.hackernews.data.Comments;
@@ -15,6 +16,7 @@ import com.jpac.hackernews.data.CommentsAdapter;
 import com.jpac.hackernews.data.News;
 import com.jpac.hackernews.http.HackerNewsClient;
 import com.jpac.hackernews.utils.Utils;
+import com.jpac.hackernews.view.SpacesItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +25,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class DetailFragment extends ListFragment {
+public class DetailFragment extends Fragment {
 
     private CommentsAdapter commentsAdapter;
 
@@ -67,13 +69,17 @@ public class DetailFragment extends ListFragment {
             setDetails(rootView);
         }
 
-        ListView list = (ListView) rootView.findViewById(android.R.id.list);
+        RecyclerView list = (RecyclerView) rootView.findViewById(R.id.commentList);
+
+        list.addItemDecoration(new SpacesItemDecoration(10));
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        list.setLayoutManager(layoutManager);
 
         commentsAdapter = new CommentsAdapter(getActivity());
         commentsList = new ArrayList<Comments>();
 
         list.setAdapter(commentsAdapter);
-        list.setEmptyView(rootView.findViewById(android.R.id.empty));
 
         swipe = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
         swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +18,7 @@ import com.jpac.hackernews.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommentsAdapter extends BaseAdapter {
+public class CommentsAdapter extends RecyclerView.Adapter<CommentsViewHolder> {
 
     private List<Comments> commentsList;
     private Context context;
@@ -28,94 +29,55 @@ public class CommentsAdapter extends BaseAdapter {
         this.commentsList = new ArrayList<Comments>();
     }
 
-    @Override
-    public int getCount() {
-        return commentsList.size();
-    }
-
-    @Override
-    public long getItemId(int i) {
-        return 0;
-    }
-
-    @Override
-    public Object getItem(int i) {
-        return commentsList.get(i);
-    }
-
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        ViewHolder holder = null;
-
-        if (view == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.list_item_comments, null);
-
-            holder = new ViewHolder();
-
-            holder.commentAuthor = (TextView) view.findViewById(R.id.textAuthor);
-            holder.commentTime = (TextView) view.findViewById(R.id.textDate);
-            holder.commentContent = (TextView) view.findViewById(R.id.textContent);
-
-            holder.replyContainer = (ViewGroup) view.findViewById(R.id.replyContainer);
-            holder.replyAuthor = (TextView) view.findViewById(R.id.replyAuthor);
-            holder.replyContent = (TextView) view.findViewById(R.id.replyContent);
-            holder.replyTitle = (TextView) view.findViewById(R.id.replyTitle);
-
-            view.setTag(holder);
-        } else {
-            holder = (ViewHolder) view.getTag();
-        }
-
-        Comments comment = (Comments) getItem(i);
-
-        holder.commentAuthor.setText(comment.getComment().getBy());
-        holder.commentTime.setText(Utils.getTimeAgo(comment.getComment().getTime()));
-        holder.commentContent.setText(Html.fromHtml(comment.getComment().getText()));
-
-        if (comment.getReply() != null) {
-            holder.replyContainer.setVisibility(View.VISIBLE);
-            holder.replyAuthor.setText(comment.getReply().getBy());
-
-            if (comment.getReply().getTitle() == null) {
-                holder.replyTitle.setVisibility(View.GONE);
-            } else {
-                holder.replyTitle.setVisibility(View.VISIBLE);
-                holder.replyTitle.setText(comment.getReply().getTitle());
-            }
-
-            holder.replyContent.setText(Html.fromHtml(comment.getReply().getText()));
-        } else {
-            holder.replyContainer.setVisibility(View.GONE);
-        }
-
-        return view;
-    }
-
     public void add(List<Comments> comments) {
         commentsList.addAll(comments);
-        notifyDataSetChanged();
     }
 
     public void clear() {
         commentsList.clear();
-        notifyDataSetChanged();
     }
 
     @Override
-    public boolean areAllItemsEnabled() {
-        return true;
+    public CommentsViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
+        View view = inflater.inflate(R.layout.list_item_comments, viewGroup, false);
+        return new CommentsViewHolder(view);
     }
 
     @Override
-    public boolean isEnabled(int position) {
-        return true;
+    public void onBindViewHolder(CommentsViewHolder holder, int i) {
+        Comments comment = getItem(i);
+
+        News main = comment.getComment();
+        News reply = comment.getReply();
+
+        holder.commentAuthor.setText(main.getBy());
+        holder.commentTime.setText(Utils.getTimeAgo(main.getTime()));
+        holder.commentContent.setText(Html.fromHtml(main.getText()));
+
+        if (reply != null) {
+            holder.replyContainer.setVisibility(View.VISIBLE);
+            holder.replyAuthor.setText(reply.getBy());
+
+            if (reply.getTitle() == null) {
+                holder.replyTitle.setVisibility(View.GONE);
+            } else {
+                holder.replyTitle.setVisibility(View.VISIBLE);
+                holder.replyTitle.setText(reply.getTitle());
+            }
+
+            holder.replyContent.setText(Html.fromHtml(reply.getText()));
+        } else {
+            holder.replyContainer.setVisibility(View.GONE);
+        }
     }
 
-    public static class ViewHolder {
+    public Comments getItem(int i) {
+        return commentsList.get(i);
+    }
 
-        TextView commentContent, commentAuthor, commentTime;
-        TextView replyTitle, replyAuthor, replyContent;
-        ViewGroup replyContainer;
-
+    @Override
+    public int getItemCount() {
+        return commentsList.size();
     }
 }
