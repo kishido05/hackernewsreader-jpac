@@ -132,6 +132,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         HackerNewsClient.getHackerNewsClient(getActivity()).getDetail(id, new Callback<News>() {
             @Override
             public void success(News news, Response response) {
+                if (!isVisible()) {
+                    return;
+                }
+
                 cachedNews.put(news.getId(), news);
 
                 if (downloadQueue.isEmpty()) {
@@ -143,6 +147,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
             @Override
             public void failure(RetrofitError error) {
+                if (!isVisible()) {
+                    return;
+                }
+
                 if (downloadQueue.isEmpty()) {
                     displayNews();
                 } else {

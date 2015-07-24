@@ -149,6 +149,10 @@ public class DetailFragment extends ListFragment {
             HackerNewsClient.getHackerNewsClient(getActivity()).getDetail(ids[0], new Callback<News>() {
                 @Override
                 public void success(News news, Response response) {
+                    if (!isVisible()) {
+                        return;
+                    }
+
                     Comments comment = new Comments();
                     comment.setComment(parent);
                     if (news != null) {
@@ -166,6 +170,10 @@ public class DetailFragment extends ListFragment {
 
                 @Override
                 public void failure(RetrofitError error) {
+                    if (!isVisible()) {
+                        return;
+                    }
+
                     downloadCount++;
 
                     if (downloadCount >= commentsCount) {
