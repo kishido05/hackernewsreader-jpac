@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,9 +52,20 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsViewHolder> {
         News main = comment.getComment();
         News reply = comment.getReply();
 
-        holder.commentAuthor.setText(main.getBy());
-        holder.commentTime.setText(Utils.getTimeAgo(main.getTime()));
-        holder.commentContent.setText(Html.fromHtml(main.getText()));
+        if (TextUtils.isEmpty(main.getText())) {
+            holder.commentAuthor.setVisibility(View.GONE);
+            holder.commentTime.setVisibility(View.GONE);
+            
+            holder.commentContent.setText("This comment has been deleted.");
+        } else {
+            holder.commentAuthor.setVisibility(View.VISIBLE);
+            holder.commentTime.setVisibility(View.VISIBLE);
+
+            holder.commentContent.setText(Html.fromHtml(main.getText()));
+            holder.commentAuthor.setText(main.getBy());
+            holder.commentTime.setText(Utils.getTimeAgo(main.getTime()));
+
+        }
 
         if (reply != null) {
             holder.replyContainer.setVisibility(View.VISIBLE);

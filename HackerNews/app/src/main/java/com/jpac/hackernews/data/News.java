@@ -14,6 +14,7 @@ public class News implements Serializable {
     protected String type;
     protected String url;
     protected String[] kids;
+    protected boolean deleted;
 
     public String getBy() {
         return by;
@@ -51,4 +52,5 @@ public class News implements Serializable {
         return kids;
     }
 
+    public boolean isDeleted() { return deleted; }
 }
