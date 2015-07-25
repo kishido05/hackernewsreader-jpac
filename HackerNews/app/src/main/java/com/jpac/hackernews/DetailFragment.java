@@ -71,7 +71,7 @@ public class DetailFragment extends Fragment {
 
         RecyclerView list = (RecyclerView) rootView.findViewById(R.id.commentList);
 
-        list.addItemDecoration(new SpacesItemDecoration(10));
+        list.addItemDecoration(new SpacesItemDecoration(5));
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         list.setLayoutManager(layoutManager);

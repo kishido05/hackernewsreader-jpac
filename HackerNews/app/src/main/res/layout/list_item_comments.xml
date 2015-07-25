@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<android.support.v7.widget.CardView  xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:roboto="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="5dp"
-    card_view:cardCornerRadius="10dp">
-
-    <RelativeLayout
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:descendantFocusability="blocksDescendants">
+    android:descendantFocusability="blocksDescendants"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp">
 
+    <android.support.v7.widget.CardView
+        android:id="@+id/commentContainer"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        card_view:cardCornerRadius="10dp">
         <RelativeLayout
-            android:id="@+id/commentContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
@@ -40,12 +40,22 @@
                 android:layout_below="@id/textAuthor"
                 roboto:fontStyle="light"/>
         </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/replyContainer"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:layout_below="@id/commentContainer"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        card_view:cardCornerRadius="10dp">
 
         <LinearLayout
-            android:id="@+id/replyContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/commentContainer"
             android:layout_marginLeft="15dp"
             android:orientation="vertical"
             android:padding="5dp">
@@ -69,5 +79,10 @@
                 roboto:fontStyle="light"/>
 
         </LinearLayout>
-    </RelativeLayout>
-</android.support.v7.widget.CardView>
+    </android.support.v7.widget.CardView>
+
+    <View
+        android:layout_below="@id/replyContainer"
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
+</RelativeLayout>
