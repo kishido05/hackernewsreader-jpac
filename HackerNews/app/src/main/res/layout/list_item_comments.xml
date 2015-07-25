@@ -14,6 +14,7 @@
         android:layout_height="wrap_content"
         android:padding="5dp"
         card_view:cardCornerRadius="10dp">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -24,6 +25,7 @@
                 android:id="@+id/textAuthor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
                 roboto:fontStyle="light"/>
 
             <com.jpac.hackernews.view.RobotoTextView
@@ -31,6 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/textAuthor"
+                android:layout_marginLeft="10dp"
                 roboto:fontStyle="light"/>
 
             <com.jpac.hackernews.view.RobotoTextView
@@ -38,6 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/textAuthor"
+                android:layout_marginTop="5dp"
                 roboto:fontStyle="light"/>
         </RelativeLayout>
     </android.support.v7.widget.CardView>
@@ -70,12 +74,14 @@
                 android:id="@+id/replyAuthor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
                 roboto:fontStyle="light"/>
 
             <com.jpac.hackernews.view.RobotoTextView
                 android:id="@+id/replyContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 roboto:fontStyle="light"/>
 
         </LinearLayout>
