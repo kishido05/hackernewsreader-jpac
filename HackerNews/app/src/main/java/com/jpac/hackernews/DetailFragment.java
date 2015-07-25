@@ -19,6 +19,8 @@ import com.jpac.hackernews.utils.Utils;
 import com.jpac.hackernews.view.SpacesItemDecoration;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import retrofit.Callback;
@@ -224,6 +226,13 @@ public class DetailFragment extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                commentsAdapter.clear();
+                Collections.sort(commentsList, new Comparator<Comments>() {
+                    @Override
+                    public int compare(Comments c1, Comments c2) {
+                        return c2.getComment().getTime().compareTo(c1.getComment().getTime());
+                    }
+                });
                 commentsAdapter.add(commentsList);
                 commentsAdapter.notifyDataSetChanged();
                 swipe.setRefreshing(false);
