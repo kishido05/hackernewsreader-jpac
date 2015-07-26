@@ -48,20 +48,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> {
         holder.points.setText(news.getScore());
 
         holder.url.setTag(news.getUrl());
-        holder.url.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String url = (String) view.getTag();
-
-                openUrl(url);
-            }
-        });
-    }
-
-    private void openUrl(String url) {
-        Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setData(Uri.parse(url));
-        context.startActivity(i);
+        holder.url.setOnClickListener(itemClickListener);
     }
 
     @Override

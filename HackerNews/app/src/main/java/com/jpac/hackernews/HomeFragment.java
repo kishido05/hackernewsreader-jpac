@@ -1,6 +1,8 @@
 package com.jpac.hackernews;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -24,7 +27,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class HomeFragment extends Fragment implements View.OnClickListener {
+public class HomeFragment extends Fragment implements View.OnClickListener, View.OnTouchListener {
 
     public interface ListCallback {
 
@@ -56,6 +59,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         newsAdapter = new NewsAdapter(getActivity(), this);
 
         list.setAdapter(newsAdapter);
+        list.setOnTouchListener(this);
 
         swipe = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
         swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -74,10 +78,29 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        int id = (Integer) view.getTag();
+        if (swipe.isRefreshing()) {
+            return;
+        }
 
-        callback.onItemSelected(id, newsAdapter.get(id));
+        switch (view.getId()) {
+            case R.id.buttonOpenLink:
+                openUrl((String) view.getTag());
+                break;
+            default:
+                int id = (Integer) view.getTag();
+                callback.onItemSelected(id, newsAdapter.get(id));
+        }
     }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        if (swipe.isRefreshing()) {
+            return true;
+        }
+
+        return false;
+    }
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -97,6 +120,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 downloadTopStories();
             }
         });
+    }
+
+    private void openUrl(String url) {
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        getActivity().startActivity(i);
     }
 
     private void downloadTopStories() {

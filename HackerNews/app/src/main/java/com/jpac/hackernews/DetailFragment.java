@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -27,7 +28,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class DetailFragment extends Fragment {
+public class DetailFragment extends Fragment implements View.OnTouchListener {
 
     private CommentsAdapter commentsAdapter;
 
@@ -39,6 +40,7 @@ public class DetailFragment extends Fragment {
     private SwipeRefreshLayout swipe;
 
     private List<Comments> commentsList;
+    private View emptyView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,6 +76,7 @@ public class DetailFragment extends Fragment {
         RecyclerView list = (RecyclerView) rootView.findViewById(R.id.commentList);
 
         list.addItemDecoration(new SpacesItemDecoration(5));
+        list.setOnTouchListener(this);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         list.setLayoutManager(layoutManager);
@@ -82,6 +85,8 @@ public class DetailFragment extends Fragment {
         commentsList = new ArrayList<Comments>();
 
         list.setAdapter(commentsAdapter);
+
+        emptyView = rootView.findViewById(android.R.id.empty);
 
         swipe = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
         swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -239,12 +244,11 @@ public class DetailFragment extends Fragment {
                 commentsAdapter.notifyDataSetChanged();
                 swipe.setRefreshing(false);
 
-                View empty = getView().findViewById(android.R.id.empty);
-                if (empty != null) {
+                if (emptyView != null) {
                     if (commentsAdapter.getItemCount() > 0) {
-                        empty.setVisibility(View.GONE);
+                        emptyView.setVisibility(View.GONE);
                     } else {
-                        empty.setVisibility(View.VISIBLE);
+                        emptyView.setVisibility(View.VISIBLE);
                     }
                 }
 
@@ -252,5 +256,13 @@ public class DetailFragment extends Fragment {
                 downloadCount = 0;
             }
         });
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        if (swipe.isRefreshing()) {
+            return true;
+        }
+        return false;
     }
 }
