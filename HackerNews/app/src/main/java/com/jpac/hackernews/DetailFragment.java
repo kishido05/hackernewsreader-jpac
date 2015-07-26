@@ -137,6 +137,8 @@ public class DetailFragment extends Fragment {
             return;
         }
 
+        commentsList.clear();
+
         String[] ids = news.getKids();
         int len = ids.length;
 
