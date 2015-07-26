@@ -46,6 +46,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
     private List<String> downloadQueue;
 
     private Footer footer;
+    private int page = 1;
+    private int storyIndex = 0;
 
     @Nullable
     @Override
@@ -92,8 +94,35 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
                 openUrl((String) view.getTag());
                 break;
             default:
-                int id = (Integer) view.getTag();
-                callback.onItemSelected(id, newsAdapter.get(id));
+                if (view.getTag() == null) {
+                    loadMore();
+                } else {
+                    int id = (Integer) view.getTag();
+                    callback.onItemSelected(id, newsAdapter.get(id));
+                }
+        }
+    }
+
+    private void loadMore() {
+        page++; // increment page count
+
+        int len = Math.min(page * 10, storyList.size());
+
+        for (int i=storyIndex; i<len; i++) {
+            if (!cachedNews.containsKey(storyList.get(i)))
+                downloadQueue.add(storyList.get(i));
+        }
+
+        if (downloadQueue.isEmpty()) {
+            displayNews();
+        } else {
+            swipe.post(new Runnable() {
+                @Override
+                public void run() {
+                swipe.setRefreshing(true);
+                downloadItemDetail();
+                }
+            });
         }
     }
 
@@ -134,6 +163,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
     }
 
     private void downloadTopStories() {
+        page = 1; // reset page count
+
         HackerNewsClient.getHackerNewsClient(getActivity()).listTopStories(new Callback<List<String>>() {
             @Override
             public void success(List<String> ids, Response response) {
@@ -141,7 +172,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
 
                 // prepare download queue
                 int len = Math.min(ids.size(), 10);
-                for (int i=0; i<len; i++) {
+                for (int i = 0; i < len; i++) {
                     if (!cachedNews.containsKey(ids.get(i)))
                         downloadQueue.add(ids.get(i));
                 }
@@ -198,22 +229,50 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                newsAdapter.clear();
-                int len = Math.min(storyList.size(), 10);
-                for (int i=0; i<len; i++) {
-                    News news = cachedNews.get(storyList.get(i));
-                    if (news != null) {
-                        newsAdapter.add(news);
-                    }
+                if (page > 1) {
+                    displayNewsMore();
+                } else {
+                    displayNewsFresh();
                 }
-
-                if (len < storyList.size()) {
-                    newsAdapter.add(footer);
-                }
-
-                newsAdapter.notifyDataSetChanged();
-                swipe.setRefreshing(false);
             }
         });
+    }
+
+    private void displayNewsMore() {
+        newsAdapter.remove(footer);
+        int len = Math.min(storyList.size(), page * 10);
+
+        for (;storyIndex<len;storyIndex++) {
+            News news = cachedNews.get(storyList.get(storyIndex));
+            if (news != null) {
+                newsAdapter.add(news);
+            }
+        }
+
+        if (len < storyList.size()) {
+            newsAdapter.add(footer);
+        }
+
+        newsAdapter.notifyDataSetChanged();
+        swipe.setRefreshing(false);
+    }
+
+    private void displayNewsFresh() {
+        newsAdapter.clear();
+        int len = Math.min(storyList.size(), 10);
+
+        for (storyIndex=0; storyIndex<len; storyIndex++) {
+            News news = cachedNews.get(storyList.get(storyIndex));
+            if (news != null) {
+                newsAdapter.add(news);
+            }
+        }
+
+        if (len < storyList.size()) {
+            newsAdapter.add(footer);
+        }
+
+        newsAdapter.notifyDataSetChanged();
+        swipe.setRefreshing(false);
     }
 }

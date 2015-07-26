@@ -49,7 +49,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> {
         News news = newsList.get(i);
 
         if (holder instanceof FooterViewHolder) {
-
+            holder.parent.setOnClickListener(itemClickListener);
         } else {
             holder.parent.setTag(i);
             holder.parent.setOnClickListener(itemClickListener);
@@ -84,6 +84,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> {
 
     public void add(News news) {
         this.newsList.add(news);
+    }
+
+    public void remove(News news) {
+        this.newsList.remove(news);
     }
 
     public News get(int i) {
