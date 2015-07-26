@@ -1,6 +1,8 @@
 package com.jpac.hackernews;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -41,7 +43,6 @@ public class DetailFragment extends Fragment implements View.OnTouchListener {
     private SwipeRefreshLayout swipe;
 
     private List<Comments> commentsList;
-    private View emptyView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,8 +88,6 @@ public class DetailFragment extends Fragment implements View.OnTouchListener {
 
         list.setAdapter(commentsAdapter);
 
-        emptyView = rootView.findViewById(android.R.id.empty);
-
         swipe = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
         swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -115,6 +114,23 @@ public class DetailFragment extends Fragment implements View.OnTouchListener {
         date.setText(Utils.getTimeAgo(news.getTime()));
         points.setText(news.getScore());
 
+        rootView.findViewById(R.id.buttonOpenLink).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (swipe.isRefreshing()) {
+                    return;
+                }
+
+                openUrl(news.getUrl());
+            }
+        });
+
+    }
+
+    private void openUrl(String url) {
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        getActivity().startActivity(i);
     }
 
     private void downloadDetail() {
@@ -243,14 +259,6 @@ public class DetailFragment extends Fragment implements View.OnTouchListener {
                     commentsAdapter.add(commentsList);
                     commentsAdapter.notifyDataSetChanged();
                     swipe.setRefreshing(false);
-
-                    if (emptyView != null) {
-                        if (commentsAdapter.getItemCount() > 0) {
-                            emptyView.setVisibility(View.GONE);
-                        } else {
-                            emptyView.setVisibility(View.VISIBLE);
-                        }
-                    }
 
                     commentsCount = 0;
                     downloadCount = 0;
