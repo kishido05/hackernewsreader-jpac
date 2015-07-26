@@ -14,8 +14,6 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        FontUtils.init(this);
-
         if (savedInstanceState == null) {
             News news = (News) getIntent().getSerializableExtra("news");
             Bundle arguments = new Bundle();

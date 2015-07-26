@@ -17,8 +17,6 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.List
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FontUtils.init(this);
-
         // show the 2 fragments if screen is landscape
         isDualPane = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }

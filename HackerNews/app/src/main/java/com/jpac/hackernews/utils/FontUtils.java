@@ -8,25 +8,15 @@ import java.util.Map;
 
 public class FontUtils {
 
-    protected Context context;
     protected Map<String, Typeface> fontCache;
 
-    private static FontUtils fontUtils;
+    private static FontUtils fontUtils = new FontUtils();
 
-    private FontUtils(Context context) {
-        this.context = context;
+    private FontUtils() {
         fontCache = new HashMap<String, Typeface>();
     }
 
-    public static void init(Context context) {
-        if (fontUtils == null) {
-            fontUtils = new FontUtils(context);
-        } else {
-            fontUtils.context = context;
-        }
-    }
-
-    public Typeface load(String path) {
+    public Typeface load(Context context, String path) {
         if (fontCache.containsKey(path)) {
             return fontCache.get(path);
         }
@@ -37,7 +27,7 @@ public class FontUtils {
         return typeface;
     }
 
-    public static Typeface open(String path) {
-        return fontUtils.load(path);
+    public static Typeface open(Context context, String path) {
+        return fontUtils.load(context, path);
     }
 }
