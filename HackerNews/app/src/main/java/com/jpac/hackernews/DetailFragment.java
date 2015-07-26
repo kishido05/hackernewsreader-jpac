@@ -1,5 +1,6 @@
 package com.jpac.hackernews;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -164,10 +165,6 @@ public class DetailFragment extends Fragment implements View.OnTouchListener {
             HackerNewsClient.getHackerNewsClient(getActivity()).getDetail(ids[0], new Callback<News>() {
                 @Override
                 public void success(News news, Response response) {
-                    if (!isVisible()) {
-                        return;
-                    }
-
                     Comments comment = new Comments();
                     comment.setComment(parent);
                     if (news != null) {
@@ -185,10 +182,6 @@ public class DetailFragment extends Fragment implements View.OnTouchListener {
 
                 @Override
                 public void failure(RetrofitError error) {
-                    if (!isVisible()) {
-                        return;
-                    }
-
                     downloadCount++;
 
                     if (downloadCount >= commentsCount) {
@@ -230,32 +223,36 @@ public class DetailFragment extends Fragment implements View.OnTouchListener {
     }
 
     private void displayComments() {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                commentsAdapter.clear();
-                Collections.sort(commentsList, new Comparator<Comments>() {
-                    @Override
-                    public int compare(Comments c1, Comments c2) {
-                        return c2.getComment().getTime().compareTo(c1.getComment().getTime());
-                    }
-                });
-                commentsAdapter.add(commentsList);
-                commentsAdapter.notifyDataSetChanged();
-                swipe.setRefreshing(false);
+        Activity activity = getActivity();
 
-                if (emptyView != null) {
-                    if (commentsAdapter.getItemCount() > 0) {
-                        emptyView.setVisibility(View.GONE);
-                    } else {
-                        emptyView.setVisibility(View.VISIBLE);
+        if (activity != null) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    commentsAdapter.clear();
+                    Collections.sort(commentsList, new Comparator<Comments>() {
+                        @Override
+                        public int compare(Comments c1, Comments c2) {
+                            return c2.getComment().getTime().compareTo(c1.getComment().getTime());
+                        }
+                    });
+                    commentsAdapter.add(commentsList);
+                    commentsAdapter.notifyDataSetChanged();
+                    swipe.setRefreshing(false);
+
+                    if (emptyView != null) {
+                        if (commentsAdapter.getItemCount() > 0) {
+                            emptyView.setVisibility(View.GONE);
+                        } else {
+                            emptyView.setVisibility(View.VISIBLE);
+                        }
                     }
+
+                    commentsCount = 0;
+                    downloadCount = 0;
                 }
-
-                commentsCount = 0;
-                downloadCount = 0;
-            }
-        });
+            });
+        }
     }
 
     @Override

@@ -197,10 +197,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
         HackerNewsClient.getHackerNewsClient(getActivity()).getDetail(id, new Callback<News>() {
             @Override
             public void success(News news, Response response) {
-                if (!isVisible()) {
-                    return;
-                }
-
                 cachedNews.put(news.getId(), news);
 
                 if (downloadQueue.isEmpty()) {
@@ -212,10 +208,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
 
             @Override
             public void failure(RetrofitError error) {
-                if (!isVisible()) {
-                    return;
-                }
-
                 if (downloadQueue.isEmpty()) {
                     displayNews();
                 } else {
@@ -226,16 +218,20 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
     }
 
     private void displayNews() {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (page > 1) {
-                    displayNewsMore();
-                } else {
-                    displayNewsFresh();
+        Activity activity = getActivity();
+
+        if (activity != null) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (page > 1) {
+                        displayNewsMore();
+                    } else {
+                        displayNewsFresh();
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     private void displayNewsMore() {
