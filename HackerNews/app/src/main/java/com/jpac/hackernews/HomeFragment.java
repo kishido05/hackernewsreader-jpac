@@ -14,6 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.jpac.hackernews.data.Footer;
 import com.jpac.hackernews.data.News;
 import com.jpac.hackernews.data.NewsAdapter;
 import com.jpac.hackernews.http.HackerNewsClient;
@@ -44,6 +45,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
     private List<String> storyList;
     private List<String> downloadQueue;
 
+    private Footer footer;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -68,6 +71,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
                 downloadTopStories();
             }
         });
+
+        footer = new Footer();
 
         cachedNews = new HashMap<String, News>();
         storyList = new ArrayList<String>();
@@ -201,6 +206,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
                         newsAdapter.add(news);
                     }
                 }
+
+                if (len < storyList.size()) {
+                    newsAdapter.add(footer);
+                }
+
                 newsAdapter.notifyDataSetChanged();
                 swipe.setRefreshing(false);
             }

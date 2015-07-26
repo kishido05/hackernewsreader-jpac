@@ -18,6 +18,9 @@ import java.util.List;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> {
 
+    private static final int TYPE_CONTENT = 0;
+    private static final int TYPE_FOOTER = 1;
+
     List<News> newsList;
     Context context;
     private View.OnClickListener itemClickListener;
@@ -31,24 +34,43 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> {
     @Override
     public NewsViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-        View view = inflater.inflate(R.layout.list_item_news, viewGroup, false);
-        return new NewsViewHolder(view);
+
+        if (i == TYPE_FOOTER) {
+            View view = inflater.inflate(R.layout.list_footer, viewGroup, false);
+            return new FooterViewHolder(view);
+        } else {
+            View view = inflater.inflate(R.layout.list_item_news, viewGroup, false);
+            return new NewsViewHolder(view);
+        }
     }
 
     @Override
     public void onBindViewHolder(NewsViewHolder holder, int i) {
         News news = newsList.get(i);
 
-        holder.parent.setTag(i);
-        holder.parent.setOnClickListener(itemClickListener);
+        if (holder instanceof FooterViewHolder) {
 
-        holder.title.setText(news.getTitle());
-        holder.author.setText(news.getBy());
-        holder.date.setText(Utils.getTimeAgo(news.getTime()));
-        holder.points.setText(news.getScore());
+        } else {
+            holder.parent.setTag(i);
+            holder.parent.setOnClickListener(itemClickListener);
 
-        holder.url.setTag(news.getUrl());
-        holder.url.setOnClickListener(itemClickListener);
+            holder.title.setText(news.getTitle());
+            holder.author.setText(news.getBy());
+            holder.date.setText(Utils.getTimeAgo(news.getTime()));
+            holder.points.setText(news.getScore());
+
+            holder.url.setTag(news.getUrl());
+            holder.url.setOnClickListener(itemClickListener);
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (get(position) instanceof Footer) {
+            return TYPE_FOOTER;
+        }
+
+        return TYPE_CONTENT;
     }
 
     @Override
