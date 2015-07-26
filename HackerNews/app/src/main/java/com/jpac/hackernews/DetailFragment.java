@@ -237,6 +237,15 @@ public class DetailFragment extends Fragment {
                 commentsAdapter.notifyDataSetChanged();
                 swipe.setRefreshing(false);
 
+                View empty = getView().findViewById(android.R.id.empty);
+                if (empty != null) {
+                    if (commentsAdapter.getItemCount() > 0) {
+                        empty.setVisibility(View.GONE);
+                    } else {
+                        empty.setVisibility(View.VISIBLE);
+                    }
+                }
+
                 commentsCount = 0;
                 downloadCount = 0;
             }
