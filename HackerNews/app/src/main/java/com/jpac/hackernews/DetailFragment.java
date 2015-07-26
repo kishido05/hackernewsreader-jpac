@@ -97,6 +97,10 @@ public class DetailFragment extends Fragment implements View.OnTouchListener {
             }
         });
 
+        boolean dual = getResources().getBoolean(R.bool.dual);
+
+        rootView.findViewById(R.id.detail).setVisibility(dual ? View.GONE : View.VISIBLE);
+
         return rootView;
     }
 
