@@ -23,8 +23,8 @@ public class RobotoTextView extends TextView {
     public RobotoTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        int fontStyle = attrs.getAttributeIntValue("http://schemas.android.com/apk/res-auto", "fontStyle", 0);
-        int textStyle = getTypeface().getStyle();
+        int fontStyle = attrs.getAttributeIntValue("http://schemas.android.com/apk/" + getContext().getPackageName(), "fontStyle", 0);
+        int textStyle = attrs.getAttributeIntValue("http://schemas.android.com/apk/res/android", "textStyle", 0);
 
         Typeface tf = FontUtils.open(ROBOTO_FONT[fontStyle]);
         setTypeface(tf, textStyle);
