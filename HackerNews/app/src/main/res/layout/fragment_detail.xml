@@ -23,8 +23,8 @@
 
         <com.jpac.hackernews.view.RobotoTextView
             android:id="@+id/textPoints"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
             android:minWidth="50dp"
             android:gravity="center"
             android:background="#11000000"
